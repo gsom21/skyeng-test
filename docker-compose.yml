@@ -1,0 +1,33 @@
+version: '2'
+services:
+  nginx:
+    image: gsom21/nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./logs:/etc/logs/nginx:rw
+      - ./nginx:/etc/nginx/conf.d
+    volumes_from:
+      - fpm:rw
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    links:
+      - fpm
+    tty: true
+
+  fpm:
+    image: gsom21/php-fpm
+    volumes:
+      - ./app:/var/www/html:rw
+
+  postgres:
+    image: postgres:10.4
+    environment:
+      - POSTGRES_PASSWORD=nhjkmuhjv
+      - POSTGRES_USER=skyeng
+    ports:
+      - 8681:5432
+
+  memcached:
+    image: memcached
